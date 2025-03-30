@@ -11,7 +11,6 @@ import { AdoptionAPI, ImageAPI } from "~/server/repository";
 import { getSession } from "~/server/session";
 
 export async function action({ request }: ActionFunctionArgs) {
-  console.log("action addpet");
   const formData = await request.formData();
   const action = formData.get("_action");
   const session = await getSession(request.headers.get("Cookie"));
@@ -28,11 +27,10 @@ export async function action({ request }: ActionFunctionArgs) {
     const spayed = formData.get("spayed") as string;
     const detail = formData.get("detail") as string;
     const image = formData.get("image") as File | null;
-    
+
     if (!image) {
       return { error: "Please upload an image." };
     }
-    console.log("image : ", image);
     try {
       const resCreatePet = await PetAPI.createPet(
         name,
@@ -46,7 +44,6 @@ export async function action({ request }: ActionFunctionArgs) {
         spayed,
         detail
       );
-      console.log("resCreatePet : ", resCreatePet);
       try {
         const resCreateAdoption = await AdoptionAPI.createAdoption(userId!, resCreatePet.pet_id);
         console.log("resCreateAdoption : ", resCreateAdoption);
@@ -55,7 +52,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       try {
         const resUploadImage = await ImageAPI.uploadImage(image, name);
-        
+
         console.log("resUploadImage : ", resUploadImage);
       } catch(error) {
         console.error("Error uploading image:", error);
@@ -297,7 +294,7 @@ export default function AddPetPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`flex flex-row hover:scale-105 duration-200 space-x-2 text-white font-bold shadow-lg 
+                className={`flex flex-row hover:scale-105 duration-200 space-x-2 text-white font-bold shadow-lg
               bg-green-500 rounded-3xl text-2xl justify-center items-center w-full h-fit py-2`}
                 name="_action"
                 value="add"
