@@ -18,8 +18,6 @@ export async function action({ request }: ActionFunctionArgs) {
 		const image = formData.get("image") as File | null;
 
 
-		console.log("image:", image);
-		console.log(typeof(price), typeof(stock));
 		if (!image) {
 			return json({ error: "Please upload an image." }, { status: 400 });
 		}
@@ -32,7 +30,6 @@ export async function action({ request }: ActionFunctionArgs) {
 			return json({ error: "Stock must be greater than 0." }, { status: 400 });
 		}
 
-		console.log("After validation");
 		let imageurl = "product-" + name.trim();
 		imageurl = imageurl.replace(/[\s/\\]/g, '_');
 		console.log("Image URL:", imageurl);
